@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كوفي ضفاف دجلة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        .modal {
+            animation: fadeIn 0.3s ease-out;
+        }
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: #3B82F6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            margin: 4px;
+            font-size: 0.875rem;
+        }
+        .tag-category {
+            background-color: #059669; /* New color for categories */
+        }
+        .tag-item {
+            background-color: #3B82F6; /* Original color for items */
+        }
+        .tag-manual {
+            background-color: #F59E0B; /* New color for manual items */
+        }
+        .tag-close {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-start pt-8 p-4">
+
+    <!-- Main Menu Page -->
+    <div id="mainMenu" class="w-full max-w-2xl text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold text-teal-400 mb-12">كوفي ضفاف دجلة</h1>
+        <div class="flex flex-col space-y-4">
+            <button id="tablesBtn" class="bg-teal-500 text-white px-8 py-4 rounded-xl shadow-lg hover:bg-teal-600 transition-colors text-xl sm:text-2xl font-semibold w-full">
+                الميز
+            </button>
+            <button id="individualBtn" class="bg-teal-500 text-white px-8 py-4 rounded-xl shadow-lg hover:bg-teal-600 transition-colors text-xl sm:text-2xl font-semibold w-full">
+                فردي
+            </button>
+        </div>
+        <!-- Settings button -->
+        <button id="settingsBtn" class="bg-gray-700 text-white px-6 py-3 mt-6 rounded-xl shadow-lg hover:bg-gray-600 transition-colors text-lg font-semibold w-full">
+            الإعدادات
+        </button>
+    </div>
+
+    <!-- Tables List Page -->
+    <div id="tablesPage" class="hidden w-full max-w-4xl p-2 sm:p-4">
+        <div class="flex items-center justify-between mb-6">
+            <button id="tablesBackBtn" class="bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition-colors text-sm sm:text-base">
+                <span class="text-lg">←</span> عودة
+            </button>
+            <h1 class="text-3xl font-bold text-teal-400">الميز</h1>
+            <div></div> <!-- Placeholder for layout -->
+        </div>
+        <div id="tablesGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            <!-- Table cards will be injected here -->
+        </div>
+    </div>
+
+    <!-- Table Orders Page -->
+    <div id="tableOrdersPage" class="hidden w-full max-w-4xl p-2 sm:p-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8">
+            <button id="tableOrdersBackBtn" class="bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition-colors text-sm sm:text-base w-full sm:w-auto mb-4 sm:mb-0">
+                <span class="text-lg">←</span> عودة
+            </button>
+            <h1 id="tableTitle" class="text-3xl font-bold text-teal-400"></h1>
+            <div class="flex space-x-2 mt-4 sm:mt-0">
+                <button id="addTableOrderBtn" class="bg-teal-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-teal-600 transition-colors text-sm sm:text-base">
+                    <span class="text-xl">+</span> إضافة
+                </button>
+                <button id="deleteAllTableBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition-colors text-sm sm:text-base">
+                    حذف الكل
+                </button>
+            </div>
+        </div>
+        
+        <div id="tableTotalSum" class="text-xl sm:text-2xl font-bold text-gray-200 mt-4 mb-6 text-center"></div>
+        <div id="tableOrdersContainer" class="space-y-4">
+            <!-- Table order cards will be injected here -->
+        </div>
+        <div id="noTableOrdersMessage" class="text-center text-gray-500 text-lg sm:text-xl hidden mt-10">
+            لا توجد طلبات لهذا الميز حالياً.
+        </div>
+    </div>
+
+    <!-- Individual Orders Page -->
+    <div id="individualPage" class="hidden w-full max-w-4xl p-2 sm:p-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-6 sm:mb-8">
+            <button id="backBtn" class="bg-gray-700 text-white px-3 py-2 rounded-lg shadow-lg hover:bg-gray-600 transition-colors text-sm sm:text-base w-full sm:w-auto mb-4 sm:mb-0">
+                <span class="text-lg">←</span> عودة
+            </button>
+            <h1 class="text-3xl font-bold text-teal-400">الطلبات الفردية</h1>
+            <div class="flex space-x-2 mt-4 sm:mt-0">
+                <button id="addIndividualOrderBtn" class="bg-teal-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-teal-600 transition-colors text-sm sm:text-base">
+                    <span class="text-xl">+</span> إضافة
+                </button>
+                <button id="deleteAllIndividualBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-600 transition-colors text-sm sm:text-base">
+                    حذف الكل
+                </button>
+            </div>
+        </div>
+        
+        <div id="totalSum" class="text-xl sm:text-2xl font-bold text-gray-200 mt-4 mb-6 text-center"></div>
+
+        <div id="individualOrdersContainer" class="space-y-4">
+            <!-- Individual order cards will be injected here -->
+        </div>
+
+        <!-- No Orders Message -->
+        <div id="noIndividualOrdersMessage" class="text-center text-gray-500 text-lg sm:text-xl hidden mt-10">
+            لا توجد طلبات فردية حالياً.
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- New Order Modal -->
+    <div id="newOrderModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-end sm:items-center justify-center hidden z-50 modal">
+        <div class="bg-gray-800 p-6 rounded-t-xl sm:rounded-xl shadow-lg w-full sm:max-w-lg slide-in">
+            <h2 id="newOrderModalTitle" class="text-xl sm:text-2xl font-bold mb-4 text-center"></h2>
+            <form id="orderForm">
+                <div class="mb-4">
+                    <label for="customerName" class="block text-gray-400 text-sm sm:text-base">اسم الشخص:</label>
+                    <input type="text" id="customerName" name="customerName" required class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-400 text-sm sm:text-base mb-2">الأصناف:</label>
+                    <div id="itemsDisplay" class="flex flex-wrap p-2 bg-gray-700 rounded-md border border-gray-600 mb-2">
+                        <!-- Tags will be dynamically added here -->
+                    </div>
+                    <div class="flex space-x-2">
+                        <select id="itemSelector" class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                            <option value="" data-price="0" disabled selected>اختر الأصناف</option>
+                            <optgroup label="نراجيل">
+                                <option value="تفاحتين" data-price="2000">تفاحتين (2000 د.ع)</option>
+                                <option value="ليمون" data-price="2000">ليمون (2000 د.ع)</option>
+                                <option value="إنكليزي" data-price="2000">إنكليزي (2000 د.ع)</option>
+                                <option value="علج ونعناع" data-price="2000">علج ونعناع (2000 د.ع)</option>
+                            </optgroup>
+                            <optgroup label="مشروبات باردة">
+                                <option value="بيبسي" data-price="500">بيبسي (500 د.ع)</option>
+                                <option value="ميرندا" data-price="500">ميرندا (500 د.ع)</option>
+                                <option value="سفن اب" data-price="500">سفن اب (500 د.ع)</option>
+                                <option value="صودا" data-price="500">صودا (500 د.ع)</option>
+                                <option value="عصير عنب" data-price="500">عصير عنب (500 د.ع)</option>
+                                <option value="عصير بطيخ" data-price="500">عصير بطيخ (500 د.ع)</option>
+                                <option value="عصير موز" data-price="500">عصير موز (500 د.ع)</option>
+                                <option value="موز وحليب" data-price="1000">موز وحليب (1000 د.ع)</option>
+                            </optgroup>
+                            <optgroup label="مشروبات ساخنة">
+                                <option value="قهوة مرة" data-price="500">قهوة مرة (500 د.ع)</option>
+                                <option value="قهوة حلوة" data-price="500">قهوة حلوة (500 د.ع)</option>
+                                <option value="قهوة جكليتية" data-price="500">قهوة جكليتية (500 د.ع)</option>
+                                <option value="كبجينو" data-price="1000">كبجينو (1000 د.ع)</option>
+                                <option value="نسكافيه" data-price="1000">نسكافيه (1000 د.ع)</option>
+                                <option value="شاي" data-price="250">شاي (250 د.ع)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="manualItemName" class="block text-gray-400 text-sm sm:text-base">أو اكتب صنفًا يدويًا:</label>
+                    <div class="flex space-x-2 items-end">
+                        <div class="flex-grow">
+                            <input type="text" id="manualItemName" placeholder="اسم الصنف" class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                        </div>
+                        <div class="flex-grow">
+                            <input type="number" id="manualItemPrice" placeholder="السعر" class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                        </div>
+                        <button type="button" id="addManualItemBtn" class="px-4 py-2 bg-blue-500 rounded-md hover:bg-blue-600 transition-colors text-sm whitespace-nowrap">إضافة</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 sm:space-x-4 mt-6">
+                    <button type="button" onclick="closeOrderModal()" class="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors text-sm">إلغاء</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-500 rounded-md hover:bg-teal-600 transition-colors text-sm">إضافة الطلب</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Order Modal -->
+    <div id="editOrderModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-end sm:items-center justify-center hidden z-50 modal">
+        <div class="bg-gray-800 p-6 rounded-t-xl sm:rounded-xl shadow-lg w-full sm:max-w-lg slide-in">
+            <h2 class="text-xl sm:text-2xl font-bold mb-4 text-center">تعديل الطلب</h2>
+            <form id="editOrderForm">
+                <input type="hidden" id="editIndex" />
+                <div class="mb-4">
+                    <label for="editCustomerName" class="block text-gray-400 text-sm sm:text-base">اسم الشخص:</label>
+                    <input type="text" id="editCustomerName" name="customerName" required class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                </div>
+                <div class="mb-4">
+                    <label for="editItemName" class="block text-gray-400 text-sm sm:text-base">الصنف:</label>
+                    <input type="text" id="editItemName" name="itemName" required class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                </div>
+                <div class="mb-6">
+                    <label for="editItemPrice" class="block text-gray-400 text-sm sm:text-base">السعر:</label>
+                    <input type="number" id="editItemPrice" name="itemPrice" required class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                </div>
+                <div class="flex justify-end space-x-2 sm:space-x-4">
+                    <button type="button" onclick="closeEditOrderModal()" class="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors text-sm">إلغاء</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 rounded-md hover:bg-blue-600 transition-colors text-sm">تعديل</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden z-50 modal">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm text-center">
+            <p class="text-base sm:text-xl mb-6">هل أنت متأكد من حذف هذا الطلب؟</p>
+            <div class="flex justify-center space-x-4">
+                <button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors text-sm">إلغاء</button>
+                <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-500 rounded-md hover:bg-red-600 transition-colors text-sm">حذف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete All Confirmation Modal -->
+    <div id="deleteAllConfirmModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden z-50 modal">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm text-center">
+            <p class="text-lg sm:text-xl mb-6 font-bold">تنبيه: سيتم حذف جميع الطلبات!</p>
+            <p class="text-gray-400 text-sm sm:text-base mb-6">هل أنت متأكد أنك تريد المتابعة؟</p>
+            <div class="flex justify-center space-x-4">
+                <button id="cancelDeleteAllBtn" class="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors text-sm">إلغاء</button>
+                <button id="confirmDeleteAllBtn" class="px-4 py-2 bg-red-500 rounded-md hover:bg-red-600 transition-colors text-sm">تأكيد الحذف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-end sm:items-center justify-center hidden z-50 modal">
+        <div class="bg-gray-800 p-6 rounded-t-xl sm:rounded-xl shadow-lg w-full sm:max-w-sm slide-in">
+            <h3 id="passwordModalTitle" class="text-lg sm:text-xl font-bold mb-4 text-center">أدخل كلمة المرور</h3>
+            <input type="password" id="passwordInput" class="w-full p-2 text-center bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+            <p id="passwordError" class="text-red-400 mt-2 hidden text-xs sm:text-sm">كلمة المرور غير صحيحة.</p>
+            <div class="flex justify-end space-x-2 sm:space-x-4 mt-6">
+                <button id="cancelPasswordBtn" class="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors text-sm">إلغاء</button>
+                <button id="submitPasswordBtn" class="px-4 py-2 bg-teal-500 rounded-md hover:bg-teal-600 transition-colors text-sm">تأكيد</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Info Modal -->
+    <div id="infoModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center hidden z-50 modal">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm text-center">
+            <p id="infoMessage" class="text-base sm:text-xl mb-6"></p>
+            <button id="closeInfoBtn" class="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-end sm:items-center justify-center hidden z-40 modal">
+        <div class="bg-gray-800 p-6 rounded-t-xl sm:rounded-xl shadow-lg w-full sm:max-w-md slide-in">
+            <h2 class="text-xl sm:text-2xl font-bold text-teal-400 mb-6 text-center">الإعدادات</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+                    <div>
+                        <p class="text-base sm:text-lg font-semibold">تفعيل حذف الطلبات</p>
+                        <p id="deleteStatus" class="text-xs sm:text-sm mt-1"></p>
+                    </div>
+                    <button id="toggleDeleteBtn" class="px-3 py-1 text-sm rounded-md transition-colors"></button>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+                    <div>
+                        <p class="text-base sm:text-lg font-semibold">تفعيل تعديل الطلبات</p>
+                        <p id="editStatus" class="text-xs sm:text-sm mt-1"></p>
+                    </div>
+                    <button id="toggleEditBtn" class="px-3 py-1 text-sm rounded-md transition-colors"></button>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg flex justify-between items-center">
+                    <div>
+                        <p class="text-base sm:text-lg font-semibold">تفعيل الدفع</p>
+                        <p id="paidStatus" class="text-xs sm:text-sm mt-1"></p>
+                    </div>
+                    <button id="togglePaidBtn" class="px-3 py-1 text-sm rounded-md transition-colors"></button>
+                </div>
+            </div>
+            <button id="closeSettingsBtn" class="mt-6 sm:mt-8 px-6 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors w-full sm:w-auto text-sm sm:text-base">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // Global state to manage data and views
+        let individualOrders = JSON.parse(localStorage.getItem('individualOrders')) || [];
+        let tablesData = JSON.parse(localStorage.getItem('tablesData')) || {};
+        let activeDataType = 'individual'; // 'individual' or 'table'
+        let activeTableId = null;
+        let itemToDeleteIndex = null;
+        let currentAction = '';
+        let selectedItems = [];
+        
+        // Persisted state for password-protected features
+        let isDeleteEnabled = JSON.parse(localStorage.getItem('isDeleteEnabled')) || false;
+        let isEditEnabled = JSON.parse(localStorage.getItem('isEditEnabled')) || false;
+        let isPaidEnabled = JSON.parse(localStorage.getItem('isPaidEnabled')) || false;
+        
+        // Passwords
+        const deletePassword = '2025000';
+        const editPassword = '2025111';
+        const paidPassword = '2025222';
+
+        // Get DOM elements
+        const mainMenu = document.getElementById('mainMenu');
+        const tablesPage = document.getElementById('tablesPage');
+        const individualPage = document.getElementById('individualPage');
+        const tableOrdersPage = document.getElementById('tableOrdersPage');
+        
+        const tablesBtn = document.getElementById('tablesBtn');
+        const individualBtn = document.getElementById('individualBtn');
+        const tablesBackBtn = document.getElementById('tablesBackBtn');
+        const backBtn = document.getElementById('backBtn');
+        const tableOrdersBackBtn = document.getElementById('tableOrdersBackBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        
+        const toggleDeleteBtn = document.getElementById('toggleDeleteBtn');
+        const toggleEditBtn = document.getElementById('toggleEditBtn');
+        const togglePaidBtn = document.getElementById('togglePaidBtn');
+
+        const deleteStatus = document.getElementById('deleteStatus');
+        const editStatus = document.getElementById('editStatus');
+        const paidStatus = document.getElementById('paidStatus');
+        
+        const tablesGrid = document.getElementById('tablesGrid');
+        const tableTitle = document.getElementById('tableTitle');
+        const addTableOrderBtn = document.getElementById('addTableOrderBtn');
+        const addIndividualOrderBtn = document.getElementById('addIndividualOrderBtn');
+        const deleteAllTableBtn = document.getElementById('deleteAllTableBtn');
+        const deleteAllIndividualBtn = document.getElementById('deleteAllIndividualBtn');
+
+        const newOrderModal = document.getElementById('newOrderModal');
+        const newOrderModalTitle = document.getElementById('newOrderModalTitle');
+        const orderForm = document.getElementById('orderForm');
+        
+        const itemSelector = document.getElementById('itemSelector');
+        const itemsDisplay = document.getElementById('itemsDisplay');
+        const manualItemNameInput = document.getElementById('manualItemName');
+        const manualItemPriceInput = document.getElementById('manualItemPrice');
+        const addManualItemBtn = document.getElementById('addManualItemBtn');
+        
+        const editOrderModal = document.getElementById('editOrderModal');
+        const editOrderForm = document.getElementById('editOrderForm');
+        
+        const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+        const deleteAllConfirmModal = document.getElementById('deleteAllConfirmModal');
+        const confirmDeleteAllBtn = document.getElementById('confirmDeleteAllBtn');
+        const cancelDeleteAllBtn = document.getElementById('cancelDeleteAllBtn');
+        
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordModalTitle = document.getElementById('passwordModalTitle');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+        const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+        const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+        
+        const infoModal = document.getElementById('infoModal');
+        const infoMessage = document.getElementById('infoMessage');
+        const closeInfoBtn = document.getElementById('closeInfoBtn');
+
+        const totalSumElement = document.getElementById('totalSum');
+        const tableTotalSumElement = document.getElementById('tableTotalSum');
+        const individualOrdersContainer = document.getElementById('individualOrdersContainer');
+        const tableOrdersContainer = document.getElementById('tableOrdersContainer');
+        const noIndividualOrdersMessage = document.getElementById('noIndividualOrdersMessage');
+        const noTableOrdersMessage = document.getElementById('noTableOrdersMessage');
+
+        // --- View Management Functions ---
+        function showPage(pageId) {
+            mainMenu.classList.add('hidden');
+            tablesPage.classList.add('hidden');
+            individualPage.classList.add('hidden');
+            tableOrdersPage.classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+        }
+
+        function renderTablesGrid() {
+            tablesGrid.innerHTML = '';
+            for (let i = 1; i <= 30; i++) {
+                const tableCard = document.createElement('div');
+                tableCard.className = 'bg-gray-800 p-4 rounded-lg shadow-md hover:bg-gray-700 transition-colors text-center cursor-pointer';
+                tableCard.innerHTML = `<h3 class="text-xl sm:text-2xl font-bold text-teal-400">ميز ${i}</h3>`;
+                tableCard.addEventListener('click', () => {
+                    activeDataType = 'table';
+                    activeTableId = `table-${i}`;
+                    tableTitle.textContent = `طلبات ميز ${i}`;
+                    showPage('tableOrdersPage');
+                    renderOrders(tablesData[activeTableId] || [], tableOrdersContainer, tableTotalSumElement, noTableOrdersMessage);
+                });
+                tablesGrid.appendChild(tableCard);
+            }
+        }
+        
+        // --- Order Rendering Function (Generalized) ---
+        function renderOrders(orders, container, sumElement, noOrdersMessage) {
+            container.innerHTML = '';
+            let totalPrice = 0;
+
+            if (orders.length === 0) {
+                noOrdersMessage.classList.remove('hidden');
+            } else {
+                noOrdersMessage.classList.add('hidden');
+                orders.forEach((order, index) => {
+                    // Only add the price to the total if the order is not paid
+                    if (!order.isPaid) {
+                         totalPrice += order.totalPrice;
+                    }
+                    
+                    const orderCard = document.createElement('div');
+                    const cardClass = order.isPaid ? 'bg-green-800' : 'bg-gray-800';
+                    orderCard.className = `${cardClass} p-4 sm:p-6 rounded-lg shadow-md flex flex-col sm:flex-row justify-between items-start sm:items-center`;
+
+                    const orderDetails = `
+                        <div class="mb-4 sm:mb-0">
+                            <div class="flex items-center mb-1">
+                                <h3 class="text-lg sm:text-xl font-bold text-teal-400">${order.customerName}</h3>
+                                ${order.isPaid ? `<span class="mr-2 text-white-400 font-bold text-sm"> - تم دفع الحساب</span>` : ''}
+                            </div>
+                            <p class="text-sm sm:text-base">الأصناف: <span class="font-semibold">${order.items.map(item => `${item.name} (${item.price} د.ع)`).join(', ')}</span></p>
+                            <p class="text-sm sm:text-base">المجموع: ${order.totalPrice} د.ع</p>
+                        </div>
+                    `;
+
+                    let orderActions = `<div class="flex space-x-2 w-full sm:w-auto justify-end sm:justify-start">`;
+                    if (isEditEnabled) {
+                        orderActions += `<button onclick="openEditOrderModal(${index})" class="px-3 py-1 bg-blue-500 rounded-md hover:bg-blue-600 transition-colors text-xs sm:text-sm">تعديل</button>`;
+                    }
+                    if (isDeleteEnabled) {
+                        orderActions += `<button onclick="confirmDelete(${index})" class="px-3 py-1 bg-red-500 rounded-md hover:bg-red-600 transition-colors text-xs sm:text-sm">حذف</button>`;
+                    }
+                    if (isPaidEnabled) {
+                        orderActions += `
+                            ${order.isPaid ?
+                                `<button onclick="cancelPayOrder(${index})" class="px-3 py-1 bg-yellow-500 rounded-md hover:bg-yellow-600 transition-colors text-xs sm:text-sm">إلغاء الدفع</button>` :
+                                `<button onclick="payOrder(${index})" class="px-3 py-1 bg-green-500 rounded-md hover:bg-green-600 transition-colors text-xs sm:text-sm">تم الدفع</button>`
+                            }
+                        `;
+                    }
+                    
+                    orderActions += `</div>`;
+
+                    orderCard.innerHTML = orderDetails + orderActions;
+                    container.appendChild(orderCard);
+                });
+            }
+            sumElement.textContent = `المجموع الكلي: ${totalPrice} د.ع`;
+        }
+        
+        // --- Modal and Action Functions (Generalized) ---
+        function openOrderModal() {
+            newOrderModal.classList.remove('hidden');
+            newOrderModalTitle.textContent = activeDataType === 'individual' ? 'طلب فردي جديد' : 'طلب ميز جديد';
+            orderForm.reset();
+            itemsDisplay.innerHTML = '';
+            selectedItems = [];
+        }
+
+        function closeOrderModal() {
+            newOrderModal.classList.add('hidden');
+        }
+        
+        function openEditOrderModal(index) {
+            const orders = activeDataType === 'individual' ? individualOrders : tablesData[activeTableId];
+            const orderToEdit = orders[index];
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editCustomerName').value = orderToEdit.customerName;
+            
+            // For editing, we will display the concatenated items and total price
+            const concatenatedItems = orderToEdit.items.map(item => `${item.name}`).join(', ');
+            document.getElementById('editItemName').value = concatenatedItems;
+            document.getElementById('editItemPrice').value = orderToEdit.totalPrice;
+            
+            editOrderModal.classList.remove('hidden');
+        }
+
+        function closeEditOrderModal() {
+            editOrderModal.classList.add('hidden');
+        }
+
+        function confirmDelete(index) {
+            itemToDeleteIndex = index;
+            deleteConfirmModal.classList.remove('hidden');
+        }
+
+        function openDeleteAllModal() {
+            deleteAllConfirmModal.classList.remove('hidden');
+        }
+
+        function payOrder(index) {
+            const orders = activeDataType === 'individual' ? individualOrders : tablesData[activeTableId];
+            orders[index].isPaid = true;
+            saveOrders();
+            if (activeDataType === 'individual') {
+                renderOrders(individualOrders, individualOrdersContainer, totalSumElement, noIndividualOrdersMessage);
+            } else {
+                renderOrders(tablesData[activeTableId], tableOrdersContainer, tableTotalSumElement, noTableOrdersMessage);
+            }
+        }
+
+        function cancelPayOrder(index) {
+            const orders = activeDataType === 'individual' ? individualOrders : tablesData[activeTableId];
+            orders[index].isPaid = false;
+            saveOrders();
+            if (activeDataType === 'individual') {
+                renderOrders(individualOrders, individualOrdersContainer, totalSumElement, noIndividualOrdersMessage);
+            } else {
+                renderOrders(tablesData[activeTableId], tableOrdersContainer, tableTotalSumElement, noTableOrdersMessage);
+            }
+        }
+
+        function saveOrders() {
+            if (activeDataType === 'individual') {
+                localStorage.setItem('individualOrders', JSON.stringify(individualOrders));
+            } else {
+                localStorage.setItem('tablesData', JSON.stringify(tablesData));
+            }
+        }
+        
+        // --- Settings and Password Logic ---
+        function updateSettingsUI() {
+            if (isDeleteEnabled) {
+                toggleDeleteBtn.textContent = 'تعطيل';
+                toggleDeleteBtn.className = 'px-3 py-1 bg-red-500 rounded-md transition-colors text-xs sm:text-sm';
+                deleteStatus.textContent = 'مفعل';
+                deleteStatus.className = 'text-green-400 text-xs sm:text-sm mt-1';
+            } else {
+                toggleDeleteBtn.textContent = 'تفعيل';
+                toggleDeleteBtn.className = 'px-3 py-1 bg-green-500 rounded-md transition-colors text-xs sm:text-sm';
+                deleteStatus.textContent = 'معطل';
+                deleteStatus.className = 'text-gray-400 text-xs sm:text-sm mt-1';
+            }
+
+            if (isEditEnabled) {
+                toggleEditBtn.textContent = 'تعطيل';
+                toggleEditBtn.className = 'px-3 py-1 bg-red-500 rounded-md transition-colors text-xs sm:text-sm';
+                editStatus.textContent = 'مفعل';
+                editStatus.className = 'text-green-400 text-xs sm:text-sm mt-1';
+            } else {
+                toggleEditBtn.textContent = 'تفعيل';
+                toggleEditBtn.className = 'px-3 py-1 bg-green-500 rounded-md transition-colors text-xs sm:text-sm';
+                editStatus.textContent = 'معطل';
+                editStatus.className = 'text-gray-400 text-xs sm:text-sm mt-1';
+            }
+
+            if (isPaidEnabled) {
+                togglePaidBtn.textContent = 'تعطيل';
+                togglePaidBtn.className = 'px-3 py-1 bg-red-500 rounded-md transition-colors text-xs sm:text-sm';
+                paidStatus.textContent = 'مفعل';
+                paidStatus.className = 'text-green-400 text-xs sm:text-sm mt-1';
+            } else {
+                togglePaidBtn.textContent = 'تفعيل';
+                togglePaidBtn.className = 'px-3 py-1 bg-green-500 rounded-md transition-colors text-xs sm:text-sm';
+                paidStatus.textContent = 'معطل';
+                paidStatus.className = 'text-gray-400 text-xs sm:text-sm mt-1';
+            }
+        }
+
+        function openSettingsModal() {
+            updateSettingsUI();
+            settingsModal.classList.remove('hidden');
+        }
+
+        function closeSettingsModal() {
+            settingsModal.classList.add('hidden');
+        }
+        
+        function handlePasswordEntry() {
+            passwordError.classList.add('hidden');
+            const enteredPassword = passwordInput.value;
+            
+            if (currentAction === 'toggleDelete') {
+                if (enteredPassword === deletePassword) {
+                    isDeleteEnabled = !isDeleteEnabled;
+                    localStorage.setItem('isDeleteEnabled', isDeleteEnabled);
+                    closePasswordModal();
+                } else {
+                    passwordError.classList.remove('hidden');
+                }
+            } else if (currentAction === 'toggleEdit') {
+                if (enteredPassword === editPassword) {
+                    isEditEnabled = !isEditEnabled;
+                    localStorage.setItem('isEditEnabled', isEditEnabled);
+                    closePasswordModal();
+                } else {
+                    passwordError.classList.remove('hidden');
+                }
+            } else if (currentAction === 'togglePaid') {
+                if (enteredPassword === paidPassword) {
+                    isPaidEnabled = !isPaidEnabled;
+                    localStorage.setItem('isPaidEnabled', isPaidEnabled);
+                    closePasswordModal();
+                } else {
+                    passwordError.classList.remove('hidden');
+                }
+            }
+        }
+
+        function openInfoModal(message) {
+            infoMessage.textContent = message;
+            infoModal.classList.remove('hidden');
+        }
+
+        function closeInfoModal() {
+            infoModal.classList.add('hidden');
+        }
+
+        function closePasswordModal() {
+            passwordModal.classList.add('hidden');
+            updateSettingsUI();
+            settingsModal.classList.remove('hidden');
+        }
+
+        function addTag(item, price, type) {
+            const tag = document.createElement('span');
+            tag.className = `tag tag-${type}`;
+            tag.textContent = `${item} (${price} د.ع)`;
+            tag.dataset.price = price;
+            tag.dataset.name = item;
+            tag.dataset.type = type;
+
+            const closeBtn = document.createElement('span');
+            closeBtn.className = 'tag-close';
+            closeBtn.textContent = 'x';
+            closeBtn.onclick = () => {
+                itemsDisplay.removeChild(tag);
+                selectedItems = selectedItems.filter(i => i.name !== item);
+            };
+
+            tag.appendChild(closeBtn);
+            itemsDisplay.appendChild(tag);
+        }
+
+        // --- Event Listeners ---
+        tablesBtn.addEventListener('click', () => {
+            showPage('tablesPage');
+            renderTablesGrid();
+        });
+        
+        individualBtn.addEventListener('click', () => {
+            activeDataType = 'individual';
+            showPage('individualPage');
+            renderOrders(individualOrders, individualOrdersContainer, totalSumElement, noIndividualOrdersMessage);
+        });
+
+        settingsBtn.addEventListener('click', openSettingsModal);
+        closeSettingsBtn.addEventListener('click', closeSettingsModal);
+
+        toggleDeleteBtn.addEventListener('click', () => {
+            currentAction = 'toggleDelete';
+            passwordModalTitle.textContent = isDeleteEnabled ? 'تأكيد التعطيل' : 'تفعيل الحذف';
+            passwordInput.value = '';
+            passwordError.classList.add('hidden');
+            settingsModal.classList.add('hidden');
+            passwordModal.classList.remove('hidden');
+        });
+
+        toggleEditBtn.addEventListener('click', () => {
+            currentAction = 'toggleEdit';
+            passwordModalTitle.textContent = isEditEnabled ? 'تأكيد التعطيل' : 'تفعيل التعديل';
+            passwordInput.value = '';
+            passwordError.classList.add('hidden');
+            settingsModal.classList.add('hidden');
+            passwordModal.classList.remove('hidden');
+        });
+
+        togglePaidBtn.addEventListener('click', () => {
+            currentAction = 'togglePaid';
+            passwordModalTitle.textContent = isPaidEnabled ? 'تأكيد التعطيل' : 'تفعيل الدفع';
+            passwordInput.value = '';
+            passwordError.classList.add('hidden');
+            settingsModal.classList.add('hidden');
+            passwordModal.classList.remove('hidden');
+        });
+        
+        submitPasswordBtn.addEventListener('click', handlePasswordEntry);
+        cancelPasswordBtn.addEventListener('click', closePasswordModal);
+        
+        tablesBackBtn.addEventListener('click', () => showPage('mainMenu'));
+        backBtn.addEventListener('click', () => showPage('mainMenu'));
+        tableOrdersBackBtn.addEventListener('click', () => {
+            showPage('tablesPage');
+            renderTablesGrid();
+        });
+
+        addIndividualOrderBtn.addEventListener('click', () => {
+            activeDataType = 'individual';
+            openOrderModal();
+        });
+
+        deleteAllIndividualBtn.addEventListener('click', () => {
+            if (isDeleteEnabled) {
+                openDeleteAllModal();
+            } else {
+                openInfoModal('الرجاء تفعيل خاصية الحذف من صفحة الإعدادات.');
+            }
+        });
+        
+        addTableOrderBtn.addEventListener('click', () => {
+            activeDataType = 'table';
+            openOrderModal();
+        });
+
+        deleteAllTableBtn.addEventListener('click', () => {
+            if (isDeleteEnabled) {
+                openDeleteAllModal();
+            } else {
+                openInfoModal('الرجاء تفعيل خاصية الحذف من صفحة الإعدادات.');
+            }
+        });
+
+        itemSelector.addEventListener('change', (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            if (selectedOption.value) {
+                const itemName = selectedOption.value;
+                const itemPrice = parseFloat(selectedOption.dataset.price);
+                // Check if the item is already selected
+                if (!selectedItems.find(item => item.name === itemName)) {
+                    selectedItems.push({ name: itemName, price: itemPrice, type: 'item' });
+                    addTag(itemName, itemPrice, 'item');
+                }
+            }
+            e.target.value = ""; // Reset the selector
+        });
+
+        // New function to handle adding manual items
+        function handleManualItemAdd() {
+            const itemName = manualItemNameInput.value.trim();
+            const itemPrice = parseFloat(manualItemPriceInput.value);
+            if (itemName && !isNaN(itemPrice) && itemPrice > 0) {
+                 if (!selectedItems.find(item => item.name === itemName)) {
+                     selectedItems.push({ name: itemName, price: itemPrice, type: 'manual' });
+                     addTag(itemName, itemPrice, 'manual');
+                 }
+                manualItemNameInput.value = '';
+                manualItemPriceInput.value = '';
+            } else {
+                openInfoModal('الرجاء إدخال اسم وسعر صحيحين.');
+            }
+        }
+        
+        // Use a dedicated button for adding manual items
+        addManualItemBtn.addEventListener('click', handleManualItemAdd);
+        
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const customerName = document.getElementById('customerName').value;
+            
+            // On form submission, we check again if there is a pending manual item.
+            const manualItemName = manualItemNameInput.value.trim();
+            const manualItemPrice = parseFloat(manualItemPriceInput.value);
+            if (manualItemName && !isNaN(manualItemPrice) && manualItemPrice > 0) {
+                if (!selectedItems.find(item => item.name === manualItemName)) {
+                     selectedItems.push({ name: manualItemName, price: manualItemPrice, type: 'manual' });
+                }
+            }
+
+            if (selectedItems.length === 0) {
+                openInfoModal('الرجاء اختيار صنف واحد على الأقل.');
+                return;
+            }
+            
+            if (!customerName) {
+                openInfoModal('الرجاء إدخال اسم الشخص.');
+                return;
+            }
+            
+            const totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0);
+
+            const newOrder = {
+                customerName: customerName,
+                items: [...selectedItems], // Create a copy of the selectedItems array
+                totalPrice: totalPrice,
+                isPaid: false
+            };
+            
+            if (activeDataType === 'individual') {
+                individualOrders.push(newOrder);
+                saveOrders();
+                renderOrders(individualOrders, individualOrdersContainer, totalSumElement, noIndividualOrdersMessage);
+            } else {
+                if (!tablesData[activeTableId]) {
+                    tablesData[activeTableId] = [];
+                }
+                tablesData[activeTableId].push(newOrder);
+                saveOrders();
+                renderOrders(tablesData[activeTableId], tableOrdersContainer, tableTotalSumElement, noTableOrdersMessage);
+            }
+            closeOrderModal();
+        });
+
+        editOrderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const index = document.getElementById('editIndex').value;
+            const newName = document.getElementById('editCustomerName').value;
+            const newItem = document.getElementById('editItemName').value;
+            const newPrice = parseFloat(document.getElementById('editItemPrice').value) || 0;
+
+            const orders = activeDataType === 'individual' ? individualOrders : tablesData[activeTableId];
+            orders[index].customerName = newName;
+            orders[index].items = [{ name: newItem, price: newPrice }];
+            orders[index].totalPrice = newPrice;
+            
+            saveOrders();
+            if (activeDataType === 'individual') {
+                renderOrders(individualOrders, individualOrdersContainer, totalSumElement, noIndividualOrdersMessage);
+            } else {
+                renderOrders(tablesData[activeTableId], tableOrdersContainer, tableTotalSumElement, noTableOrdersMessage);
+            }
+            closeEditOrderModal();
+        });
+
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (itemToDeleteIndex !== null) {
+                const orders = activeDataType === 'individual' ? individualOrders : tablesData[activeTableId];
+                orders.splice(itemToDeleteIndex, 1);
+                saveOrders();
+                if (activeDataType === 'individual') {
+                    renderOrders(individualOrders, individualOrdersContainer, totalSumElement, noIndividualOrdersMessage);
+                } else {
+                    renderOrders(tablesData[activeTableId], tableOrdersContainer, tableTotalSumElement, noTableOrdersMessage);
+                }
+                itemToDeleteIndex = null;
+            }
+            deleteConfirmModal.classList.add('hidden');
+        });
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            itemToDeleteIndex = null;
+            deleteConfirmModal.classList.add('hidden');
+        });
+
+        confirmDeleteAllBtn.addEventListener('click', () => {
+            if (activeDataType === 'individual') {
+                individualOrders = [];
+                saveOrders();
+                renderOrders(individualOrders, individualOrdersContainer, totalSumElement, noIndividualOrdersMessage);
+            } else {
+                if (tablesData[activeTableId]) {
+                    tablesData[activeTableId] = [];
+                }
+                saveOrders();
+                renderOrders(tablesData[activeTableId], tableOrdersContainer, tableTotalSumElement, noTableOrdersMessage);
+            }
+            deleteAllConfirmModal.classList.add('hidden');
+        });
+
+        cancelDeleteAllBtn.addEventListener('click', () => {
+            deleteAllConfirmModal.classList.add('hidden');
+        });
+
+        closeInfoBtn.addEventListener('click', () => {
+            closeInfoModal();
+        });
+
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSettingsUI();
+        });
+        
+    </script>
+
+</body>
+</html>
