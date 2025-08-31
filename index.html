@@ -27,25 +27,44 @@
         .tag {
             display: inline-flex;
             align-items: center;
-            background-color: #3B82F6;
-            color: white;
             padding: 4px 8px;
             border-radius: 9999px;
             margin: 4px;
             font-size: 0.875rem;
         }
-        .tag-category {
-            background-color: #059669; /* New color for categories */
+        /* Item colors based on category */
+        .tag-category-نراجيل {
+            background-color: #059669; /* Green */
+            color: white;
         }
-        .tag-item {
-            background-color: #3B82F6; /* Original color for items */
+        .tag-category-مشروبات-باردة {
+            background-color: #3B82F6; /* Blue */
+            color: white;
+        }
+        .tag-category-مشروبات-ساخنة {
+            background-color: #F97316; /* Orange */
+            color: white;
         }
         .tag-manual {
-            background-color: #F59E0B; /* New color for manual items */
+            background-color: #F59E0B; /* Yellow */
+            color: white;
         }
         .tag-close {
             margin-left: 8px;
             cursor: pointer;
+            font-weight: bold;
+        }
+        /* Colors for the select options */
+        .option-نراجيل {
+            color: #059669; /* Green */
+            font-weight: bold;
+        }
+        .option-مشروبات-باردة {
+            color: #3B82F6; /* Blue */
+            font-weight: bold;
+        }
+        .option-مشروبات-ساخنة {
+            color: #F97316; /* Orange */
             font-weight: bold;
         }
     </style>
@@ -158,28 +177,28 @@
                         <select id="itemSelector" class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
                             <option value="" data-price="0" disabled selected>اختر الأصناف</option>
                             <optgroup label="نراجيل">
-                                <option value="تفاحتين" data-price="2000">تفاحتين (2000 د.ع)</option>
-                                <option value="ليمون" data-price="2000">ليمون (2000 د.ع)</option>
-                                <option value="إنكليزي" data-price="2000">إنكليزي (2000 د.ع)</option>
-                                <option value="علج ونعناع" data-price="2000">علج ونعناع (2000 د.ع)</option>
+                                <option value="تفاحتين" data-price="2000" data-category="نراجيل">تفاحتين (2000 د.ع)</option>
+                                <option value="ليمون" data-price="2000" data-category="نراجيل">ليمون (2000 د.ع)</option>
+                                <option value="إنكليزي" data-price="2000" data-category="نراجيل">إنكليزي (2000 د.ع)</option>
+                                <option value="علج ونعناع" data-price="2000" data-category="نراجيل">علج ونعناع (2000 د.ع)</option>
                             </optgroup>
                             <optgroup label="مشروبات باردة">
-                                <option value="بيبسي" data-price="500">بيبسي (500 د.ع)</option>
-                                <option value="ميرندا" data-price="500">ميرندا (500 د.ع)</option>
-                                <option value="سفن اب" data-price="500">سفن اب (500 د.ع)</option>
-                                <option value="صودا" data-price="500">صودا (500 د.ع)</option>
-                                <option value="عصير عنب" data-price="500">عصير عنب (500 د.ع)</option>
-                                <option value="عصير بطيخ" data-price="500">عصير بطيخ (500 د.ع)</option>
-                                <option value="عصير موز" data-price="500">عصير موز (500 د.ع)</option>
-                                <option value="موز وحليب" data-price="1000">موز وحليب (1000 د.ع)</option>
+                                <option value="بيبسي" data-price="500" data-category="مشروبات-باردة">بيبسي (500 د.ع)</option>
+                                <option value="ميرندا" data-price="500" data-category="مشروبات-باردة">ميرندا (500 د.ع)</option>
+                                <option value="سفن اب" data-price="500" data-category="مشروبات-باردة">سفن اب (500 د.ع)</option>
+                                <option value="صودا" data-price="500" data-category="مشروبات-باردة">صودا (500 د.ع)</option>
+                                <option value="عصير عنب" data-price="500" data-category="مشروبات-باردة">عصير عنب (500 د.ع)</option>
+                                <option value="عصير بطيخ" data-price="500" data-category="مشروبات-باردة">عصير بطيخ (500 د.ع)</option>
+                                <option value="عصير موز" data-price="500" data-category="مشروبات-باردة">عصير موز (500 د.ع)</option>
+                                <option value="موز وحليب" data-price="1000" data-category="مشروبات-باردة">موز وحليب (1000 د.ع)</option>
                             </optgroup>
                             <optgroup label="مشروبات ساخنة">
-                                <option value="قهوة مرة" data-price="500">قهوة مرة (500 د.ع)</option>
-                                <option value="قهوة حلوة" data-price="500">قهوة حلوة (500 د.ع)</option>
-                                <option value="قهوة جكليتية" data-price="500">قهوة جكليتية (500 د.ع)</option>
-                                <option value="كبجينو" data-price="1000">كبجينو (1000 د.ع)</option>
-                                <option value="نسكافيه" data-price="1000">نسكافيه (1000 د.ع)</option>
-                                <option value="شاي" data-price="250">شاي (250 د.ع)</option>
+                                <option value="قهوة مرة" data-price="500" data-category="مشروبات-ساخنة">قهوة مرة (500 د.ع)</option>
+                                <option value="قهوة حلوة" data-price="500" data-category="مشروبات-ساخنة">قهوة حلوة (500 د.ع)</option>
+                                <option value="قهوة جكليتية" data-price="500" data-category="مشروبات-ساخنة">قهوة جكليتية (500 د.ع)</option>
+                                <option value="كبجينو" data-price="1000" data-category="مشروبات-ساخنة">كبجينو (1000 د.ع)</option>
+                                <option value="نسكافيه" data-price="1000" data-category="مشروبات-ساخنة">نسكافيه (1000 د.ع)</option>
+                                <option value="شاي" data-price="250" data-category="مشروبات-ساخنة">شاي (250 د.ع)</option>
                             </optgroup>
                         </select>
                     </div>
@@ -187,13 +206,9 @@
 
                 <div class="mb-4">
                     <label for="manualItemName" class="block text-gray-400 text-sm sm:text-base">أو اكتب صنفًا يدويًا:</label>
-                    <div class="flex space-x-2 items-end">
-                        <div class="flex-grow">
-                            <input type="text" id="manualItemName" placeholder="اسم الصنف" class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
-                        </div>
-                        <div class="flex-grow">
-                            <input type="number" id="manualItemPrice" placeholder="السعر" class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
-                        </div>
+                    <div class="flex space-x-2">
+                        <input type="text" id="manualItemName" placeholder="اسم الصنف" class="flex-grow p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                        <input type="number" id="manualItemPrice" placeholder="السعر" class="w-24 p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
                         <button type="button" id="addManualItemBtn" class="px-4 py-2 bg-blue-500 rounded-md hover:bg-blue-600 transition-colors text-sm whitespace-nowrap">إضافة</button>
                     </div>
                 </div>
@@ -216,14 +231,53 @@
                     <label for="editCustomerName" class="block text-gray-400 text-sm sm:text-base">اسم الشخص:</label>
                     <input type="text" id="editCustomerName" name="customerName" required class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
                 </div>
+                
+                <!-- NEW: Items selection for editing -->
                 <div class="mb-4">
-                    <label for="editItemName" class="block text-gray-400 text-sm sm:text-base">الصنف:</label>
-                    <input type="text" id="editItemName" name="itemName" required class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                    <label class="block text-gray-400 text-sm sm:text-base mb-2">الأصناف:</label>
+                    <div id="editItemsDisplay" class="flex flex-wrap p-2 bg-gray-700 rounded-md border border-gray-600 mb-2">
+                        <!-- Tags will be dynamically added here -->
+                    </div>
+                    <div class="flex space-x-2">
+                        <select id="editItemSelector" class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                            <option value="" data-price="0" disabled selected>اختر الأصناف</option>
+                            <optgroup label="نراجيل">
+                                <option value="تفاحتين" data-price="2000" data-category="نراجيل">تفاحتين (2000 د.ع)</option>
+                                <option value="ليمون" data-price="2000" data-category="نراجيل">ليمون (2000 د.ع)</option>
+                                <option value="إنكليزي" data-price="2000" data-category="نراجيل">إنكليزي (2000 د.ع)</option>
+                                <option value="علج ونعناع" data-price="2000" data-category="نراجيل">علج ونعناع (2000 د.ع)</option>
+                            </optgroup>
+                            <optgroup label="مشروبات باردة">
+                                <option value="بيبسي" data-price="500" data-category="مشروبات-باردة">بيبسي (500 د.ع)</option>
+                                <option value="ميرندا" data-price="500" data-category="مشروبات-باردة">ميرندا (500 د.ع)</option>
+                                <option value="سفن اب" data-price="500" data-category="مشروبات-باردة">سفن اب (500 د.ع)</option>
+                                <option value="صودا" data-price="500" data-category="مشروبات-باردة">صودا (500 د.ع)</option>
+                                <option value="عصير عنب" data-price="500" data-category="مشروبات-باردة">عصير عنب (500 د.ع)</option>
+                                <option value="عصير بطيخ" data-price="500" data-category="مشروبات-باردة">عصير بطيخ (500 د.ع)</option>
+                                <option value="عصير موز" data-price="500" data-category="مشروبات-باردة">عصير موز (500 د.ع)</option>
+                                <option value="موز وحليب" data-price="1000" data-category="مشروبات-باردة">موز وحليب (1000 د.ع)</option>
+                            </optgroup>
+                            <optgroup label="مشروبات ساخنة">
+                                <option value="قهوة مرة" data-price="500" data-category="مشروبات-ساخنة">قهوة مرة (500 د.ع)</option>
+                                <option value="قهوة حلوة" data-price="500" data-category="مشروبات-ساخنة">قهوة حلوة (500 د.ع)</option>
+                                <option value="قهوة جكليتية" data-price="500" data-category="مشروبات-ساخنة">قهوة جكليتية (500 د.ع)</option>
+                                <option value="كبجينو" data-price="1000" data-category="مشروبات-ساخنة">كبجينو (1000 د.ع)</option>
+                                <option value="نسكافيه" data-price="1000" data-category="مشروبات-ساخنة">نسكافيه (1000 د.ع)</option>
+                                <option value="شاي" data-price="250" data-category="مشروبات-ساخنة">شاي (250 د.ع)</option>
+                            </optgroup>
+                        </select>
+                    </div>
                 </div>
+                
                 <div class="mb-6">
-                    <label for="editItemPrice" class="block text-gray-400 text-sm sm:text-base">السعر:</label>
-                    <input type="number" id="editItemPrice" name="itemPrice" required class="w-full p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                    <label for="editManualItemName" class="block text-gray-400 text-sm sm:text-base">أو اكتب صنفًا يدويًا:</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="editManualItemName" placeholder="اسم الصنف" class="flex-grow p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                        <input type="number" id="editManualItemPrice" placeholder="السعر" class="w-24 p-2 bg-gray-700 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm">
+                        <button type="button" id="addEditManualItemBtn" class="px-4 py-2 bg-blue-500 rounded-md hover:bg-blue-600 transition-colors text-sm whitespace-nowrap">إضافة</button>
+                    </div>
                 </div>
+
                 <div class="flex justify-end space-x-2 sm:space-x-4">
                     <button type="button" onclick="closeEditOrderModal()" class="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-500 transition-colors text-sm">إلغاء</button>
                     <button type="submit" class="px-4 py-2 bg-blue-500 rounded-md hover:bg-blue-600 transition-colors text-sm">تعديل</button>
@@ -361,15 +415,22 @@
         const newOrderModalTitle = document.getElementById('newOrderModalTitle');
         const orderForm = document.getElementById('orderForm');
         
+        // New Order Modal elements
         const itemSelector = document.getElementById('itemSelector');
         const itemsDisplay = document.getElementById('itemsDisplay');
         const manualItemNameInput = document.getElementById('manualItemName');
         const manualItemPriceInput = document.getElementById('manualItemPrice');
         const addManualItemBtn = document.getElementById('addManualItemBtn');
         
+        // Edit Order Modal elements
         const editOrderModal = document.getElementById('editOrderModal');
         const editOrderForm = document.getElementById('editOrderForm');
-        
+        const editItemSelector = document.getElementById('editItemSelector');
+        const editItemsDisplay = document.getElementById('editItemsDisplay');
+        const editManualItemNameInput = document.getElementById('editManualItemName');
+        const editManualItemPriceInput = document.getElementById('editManualItemPrice');
+        const addEditManualItemBtn = document.getElementById('addEditManualItemBtn');
+
         const deleteConfirmModal = document.getElementById('deleteConfirmModal');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
@@ -447,7 +508,7 @@
                                 <h3 class="text-lg sm:text-xl font-bold text-teal-400">${order.customerName}</h3>
                                 ${order.isPaid ? `<span class="mr-2 text-white-400 font-bold text-sm"> - تم دفع الحساب</span>` : ''}
                             </div>
-                            <p class="text-sm sm:text-base">الأصناف: <span class="font-semibold">${order.items.map(item => `${item.name} (${item.price} د.ع)`).join(', ')}</span></p>
+                            <p class="text-sm sm:text-base">الأصناف: <span class="font-semibold">${order.items.map(item => `<span class="tag tag-category-${item.category.replace(/\s+/g, '-')}" >${item.name} (${item.price} د.ع)</span>`).join(' ')}</span></p>
                             <p class="text-sm sm:text-base">المجموع: ${order.totalPrice} د.ع</p>
                         </div>
                     `;
@@ -496,10 +557,14 @@
             document.getElementById('editIndex').value = index;
             document.getElementById('editCustomerName').value = orderToEdit.customerName;
             
-            // For editing, we will display the concatenated items and total price
-            const concatenatedItems = orderToEdit.items.map(item => `${item.name}`).join(', ');
-            document.getElementById('editItemName').value = concatenatedItems;
-            document.getElementById('editItemPrice').value = orderToEdit.totalPrice;
+            // Clear previous items and populate the selectedItems array
+            selectedItems = [...orderToEdit.items];
+            editItemsDisplay.innerHTML = '';
+            
+            // Render existing items as tags
+            selectedItems.forEach(item => {
+                 addTag(item.name, item.price, item.category, editItemsDisplay);
+            });
             
             editOrderModal.classList.remove('hidden');
         }
@@ -641,24 +706,25 @@
             settingsModal.classList.remove('hidden');
         }
 
-        function addTag(item, price, type) {
+        // Generalized function to add item tags to a container
+        function addTag(item, price, category, containerElement) {
             const tag = document.createElement('span');
-            tag.className = `tag tag-${type}`;
+            tag.className = `tag tag-category-${category.replace(/\s+/g, '-')}`;
             tag.textContent = `${item} (${price} د.ع)`;
             tag.dataset.price = price;
             tag.dataset.name = item;
-            tag.dataset.type = type;
+            tag.dataset.category = category;
 
             const closeBtn = document.createElement('span');
             closeBtn.className = 'tag-close';
             closeBtn.textContent = 'x';
             closeBtn.onclick = () => {
-                itemsDisplay.removeChild(tag);
+                containerElement.removeChild(tag);
                 selectedItems = selectedItems.filter(i => i.name !== item);
             };
 
             tag.appendChild(closeBtn);
-            itemsDisplay.appendChild(tag);
+            containerElement.appendChild(tag);
         }
 
         // --- Event Listeners ---
@@ -739,38 +805,69 @@
             }
         });
 
+        // Event listener for adding items from the new order selector
         itemSelector.addEventListener('change', (e) => {
             const selectedOption = e.target.options[e.target.selectedIndex];
             if (selectedOption.value) {
                 const itemName = selectedOption.value;
                 const itemPrice = parseFloat(selectedOption.dataset.price);
-                // Check if the item is already selected
+                const category = selectedOption.dataset.category;
+                
                 if (!selectedItems.find(item => item.name === itemName)) {
-                    selectedItems.push({ name: itemName, price: itemPrice, type: 'item' });
-                    addTag(itemName, itemPrice, 'item');
+                    selectedItems.push({ name: itemName, price: itemPrice, category: category });
+                    addTag(itemName, itemPrice, category, itemsDisplay);
                 }
             }
             e.target.value = ""; // Reset the selector
         });
-
-        // New function to handle adding manual items
-        function handleManualItemAdd() {
+        
+        // Event listener for adding manual items from the new order form
+        addManualItemBtn.addEventListener('click', () => {
             const itemName = manualItemNameInput.value.trim();
             const itemPrice = parseFloat(manualItemPriceInput.value);
             if (itemName && !isNaN(itemPrice) && itemPrice > 0) {
                  if (!selectedItems.find(item => item.name === itemName)) {
-                     selectedItems.push({ name: itemName, price: itemPrice, type: 'manual' });
-                     addTag(itemName, itemPrice, 'manual');
+                     selectedItems.push({ name: itemName, price: itemPrice, category: 'manual' });
+                     addTag(itemName, itemPrice, 'manual', itemsDisplay);
                  }
                 manualItemNameInput.value = '';
                 manualItemPriceInput.value = '';
             } else {
                 openInfoModal('الرجاء إدخال اسم وسعر صحيحين.');
             }
-        }
-        
-        // Use a dedicated button for adding manual items
-        addManualItemBtn.addEventListener('click', handleManualItemAdd);
+        });
+
+        // Event listener for adding items from the edit order selector
+        editItemSelector.addEventListener('change', (e) => {
+            const selectedOption = e.target.options[e.target.selectedIndex];
+            if (selectedOption.value) {
+                const itemName = selectedOption.value;
+                const itemPrice = parseFloat(selectedOption.dataset.price);
+                const category = selectedOption.dataset.category;
+                
+                if (!selectedItems.find(item => item.name === itemName)) {
+                    selectedItems.push({ name: itemName, price: itemPrice, category: category });
+                    addTag(itemName, itemPrice, category, editItemsDisplay);
+                }
+            }
+            e.target.value = ""; // Reset the selector
+        });
+
+        // Event listener for adding manual items from the edit order form
+        addEditManualItemBtn.addEventListener('click', () => {
+            const itemName = editManualItemNameInput.value.trim();
+            const itemPrice = parseFloat(editManualItemPriceInput.value);
+            if (itemName && !isNaN(itemPrice) && itemPrice > 0) {
+                 if (!selectedItems.find(item => item.name === itemName)) {
+                     selectedItems.push({ name: itemName, price: itemPrice, category: 'manual' });
+                     addTag(itemName, itemPrice, 'manual', editItemsDisplay);
+                 }
+                editManualItemNameInput.value = '';
+                editManualItemPriceInput.value = '';
+            } else {
+                openInfoModal('الرجاء إدخال اسم وسعر صحيحين.');
+            }
+        });
         
         orderForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -782,7 +879,7 @@
             const manualItemPrice = parseFloat(manualItemPriceInput.value);
             if (manualItemName && !isNaN(manualItemPrice) && manualItemPrice > 0) {
                 if (!selectedItems.find(item => item.name === manualItemName)) {
-                     selectedItems.push({ name: manualItemName, price: manualItemPrice, type: 'manual' });
+                     selectedItems.push({ name: manualItemName, price: manualItemPrice, category: 'manual' });
                 }
             }
 
@@ -824,13 +921,20 @@
             e.preventDefault();
             const index = document.getElementById('editIndex').value;
             const newName = document.getElementById('editCustomerName').value;
-            const newItem = document.getElementById('editItemName').value;
-            const newPrice = parseFloat(document.getElementById('editItemPrice').value) || 0;
-
+            
+            if (selectedItems.length === 0) {
+                 openInfoModal('الرجاء اختيار صنف واحد على الأقل.');
+                 return;
+            }
+            if (!newName) {
+                openInfoModal('الرجاء إدخال اسم الشخص.');
+                return;
+            }
+            
             const orders = activeDataType === 'individual' ? individualOrders : tablesData[activeTableId];
             orders[index].customerName = newName;
-            orders[index].items = [{ name: newItem, price: newPrice }];
-            orders[index].totalPrice = newPrice;
+            orders[index].items = [...selectedItems]; // Use the updated selected items
+            orders[index].totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0); // Recalculate total price
             
             saveOrders();
             if (activeDataType === 'individual') {
@@ -887,6 +991,18 @@
         // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
             updateSettingsUI();
+            
+            // Add colors to select options for both modals
+            const selectors = [itemSelector, editItemSelector];
+            selectors.forEach(selector => {
+                const options = selector.querySelectorAll('option');
+                options.forEach(option => {
+                    const category = option.dataset.category;
+                    if (category) {
+                        option.classList.add(`option-${category.replace(/\s+/g, '-')}`);
+                    }
+                });
+            });
         });
         
     </script>
