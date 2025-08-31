@@ -370,6 +370,7 @@
         let itemToDeleteIndex = null;
         let currentAction = '';
         let selectedItems = [];
+        let currentPage = 'mainMenu';
         
         // Persisted state for password-protected features
         let isDeleteEnabled = JSON.parse(localStorage.getItem('isDeleteEnabled')) || false;
@@ -464,6 +465,7 @@
             individualPage.classList.add('hidden');
             tableOrdersPage.classList.add('hidden');
             document.getElementById(pageId).classList.remove('hidden');
+            currentPage = pageId;
         }
 
         function renderTablesGrid() {
@@ -1009,6 +1011,20 @@
                 e.returnValue = '';
             }
         });
+
+        // Disable browser back button
+        window.addEventListener('popstate', (event) => {
+            if (hasPendingOrders()) {
+                history.pushState(null, '', location.href); // Push current state back to history
+                openInfoModal('لا يمكنك الرجوع لأن هناك طلبات قيد التنفيذ. الرجاء حذفها أو إنهائها أولاً.');
+            } else {
+                // Allow back if no pending orders
+                history.back();
+            }
+        });
+        
+        // Initial setup for history state
+        history.pushState(null, '', location.href);
 
         // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
