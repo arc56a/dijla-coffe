@@ -370,7 +370,6 @@
         let itemToDeleteIndex = null;
         let currentAction = '';
         let selectedItems = [];
-        let currentPage = 'mainMenu';
         
         // Persisted state for password-protected features
         let isDeleteEnabled = JSON.parse(localStorage.getItem('isDeleteEnabled')) || false;
@@ -465,7 +464,6 @@
             individualPage.classList.add('hidden');
             tableOrdersPage.classList.add('hidden');
             document.getElementById(pageId).classList.remove('hidden');
-            currentPage = pageId;
         }
 
         function renderTablesGrid() {
@@ -559,13 +557,13 @@
             document.getElementById('editIndex').value = index;
             document.getElementById('editCustomerName').value = orderToEdit.customerName;
             
-            // Clear previous items and populate the selectedItems array
-            selectedItems = [...orderToEdit.items];
+            // Clear previous items and populate the selectedItems array with new IDs
+            selectedItems = orderToEdit.items.map(item => ({ ...item, id: Date.now() + Math.random() }));
             editItemsDisplay.innerHTML = '';
             
             // Render existing items as tags
             selectedItems.forEach(item => {
-                 addTag(item.name, item.price, item.category, editItemsDisplay);
+                 addTag(item, editItemsDisplay);
             });
             
             editOrderModal.classList.remove('hidden');
@@ -709,20 +707,20 @@
         }
 
         // Generalized function to add item tags to a container
-        function addTag(item, price, category, containerElement) {
+        function addTag(item, containerElement) {
             const tag = document.createElement('span');
-            tag.className = `tag tag-category-${category.replace(/\s+/g, '-')}`;
-            tag.textContent = `${item} (${price} د.ع)`;
-            tag.dataset.price = price;
-            tag.dataset.name = item;
-            tag.dataset.category = category;
+            tag.className = `tag tag-category-${item.category.replace(/\s+/g, '-')}`;
+            tag.textContent = `${item.name} (${item.price} د.ع)`;
+            tag.dataset.id = item.id;
 
             const closeBtn = document.createElement('span');
             closeBtn.className = 'tag-close';
             closeBtn.textContent = 'x';
             closeBtn.onclick = () => {
+                // Remove the item from the selectedItems array using its unique ID
+                selectedItems = selectedItems.filter(i => i.id !== item.id);
+                // Remove the tag element from the DOM
                 containerElement.removeChild(tag);
-                selectedItems = selectedItems.filter(i => i.name !== item);
             };
 
             tag.appendChild(closeBtn);
@@ -811,14 +809,15 @@
         itemSelector.addEventListener('change', (e) => {
             const selectedOption = e.target.options[e.target.selectedIndex];
             if (selectedOption.value) {
-                const itemName = selectedOption.value;
-                const itemPrice = parseFloat(selectedOption.dataset.price);
-                const category = selectedOption.dataset.category;
+                const newItem = {
+                    id: Date.now() + Math.random(), // Add a unique ID
+                    name: selectedOption.value,
+                    price: parseFloat(selectedOption.dataset.price),
+                    category: selectedOption.dataset.category
+                };
                 
-                if (!selectedItems.find(item => item.name === itemName)) {
-                    selectedItems.push({ name: itemName, price: itemPrice, category: category });
-                    addTag(itemName, itemPrice, category, itemsDisplay);
-                }
+                selectedItems.push(newItem);
+                addTag(newItem, itemsDisplay);
             }
             e.target.value = ""; // Reset the selector
         });
@@ -828,10 +827,14 @@
             const itemName = manualItemNameInput.value.trim();
             const itemPrice = parseFloat(manualItemPriceInput.value);
             if (itemName && !isNaN(itemPrice) && itemPrice > 0) {
-                 if (!selectedItems.find(item => item.name === itemName)) {
-                     selectedItems.push({ name: itemName, price: itemPrice, category: 'manual' });
-                     addTag(itemName, itemPrice, 'manual', itemsDisplay);
-                 }
+                 const newItem = {
+                    id: Date.now() + Math.random(), // Add a unique ID
+                    name: itemName,
+                    price: itemPrice,
+                    category: 'manual'
+                };
+                selectedItems.push(newItem);
+                addTag(newItem, itemsDisplay);
                 manualItemNameInput.value = '';
                 manualItemPriceInput.value = '';
             } else {
@@ -843,14 +846,14 @@
         editItemSelector.addEventListener('change', (e) => {
             const selectedOption = e.target.options[e.target.selectedIndex];
             if (selectedOption.value) {
-                const itemName = selectedOption.value;
-                const itemPrice = parseFloat(selectedOption.dataset.price);
-                const category = selectedOption.dataset.category;
-                
-                if (!selectedItems.find(item => item.name === itemName)) {
-                    selectedItems.push({ name: itemName, price: itemPrice, category: category });
-                    addTag(itemName, itemPrice, category, editItemsDisplay);
-                }
+                const newItem = {
+                    id: Date.now() + Math.random(), // Add a unique ID
+                    name: selectedOption.value,
+                    price: parseFloat(selectedOption.dataset.price),
+                    category: selectedOption.dataset.category
+                };
+                selectedItems.push(newItem);
+                addTag(newItem, editItemsDisplay);
             }
             e.target.value = ""; // Reset the selector
         });
@@ -860,10 +863,14 @@
             const itemName = editManualItemNameInput.value.trim();
             const itemPrice = parseFloat(editManualItemPriceInput.value);
             if (itemName && !isNaN(itemPrice) && itemPrice > 0) {
-                 if (!selectedItems.find(item => item.name === itemName)) {
-                     selectedItems.push({ name: itemName, price: itemPrice, category: 'manual' });
-                     addTag(itemName, itemPrice, 'manual', editItemsDisplay);
-                 }
+                 const newItem = {
+                    id: Date.now() + Math.random(), // Add a unique ID
+                    name: itemName,
+                    price: itemPrice,
+                    category: 'manual'
+                };
+                selectedItems.push(newItem);
+                addTag(newItem, editItemsDisplay);
                 editManualItemNameInput.value = '';
                 editManualItemPriceInput.value = '';
             } else {
@@ -876,15 +883,6 @@
             
             const customerName = document.getElementById('customerName').value;
             
-            // On form submission, we check again if there is a pending manual item.
-            const manualItemName = manualItemNameInput.value.trim();
-            const manualItemPrice = parseFloat(manualItemPriceInput.value);
-            if (manualItemName && !isNaN(manualItemPrice) && manualItemPrice > 0) {
-                if (!selectedItems.find(item => item.name === manualItemName)) {
-                     selectedItems.push({ name: manualItemName, price: manualItemPrice, category: 'manual' });
-                }
-            }
-
             if (selectedItems.length === 0) {
                 openInfoModal('الرجاء اختيار صنف واحد على الأقل.');
                 return;
@@ -899,7 +897,7 @@
 
             const newOrder = {
                 customerName: customerName,
-                items: [...selectedItems], // Create a copy of the selectedItems array
+                items: selectedItems.map(item => ({ name: item.name, price: item.price, category: item.category })),
                 totalPrice: totalPrice,
                 isPaid: false
             };
@@ -935,7 +933,7 @@
             
             const orders = activeDataType === 'individual' ? individualOrders : tablesData[activeTableId];
             orders[index].customerName = newName;
-            orders[index].items = [...selectedItems]; // Use the updated selected items
+            orders[index].items = selectedItems.map(item => ({ name: item.name, price: item.price, category: item.category }));
             orders[index].totalPrice = selectedItems.reduce((sum, item) => sum + item.price, 0); // Recalculate total price
             
             saveOrders();
@@ -1011,20 +1009,6 @@
                 e.returnValue = '';
             }
         });
-
-        // Disable browser back button
-        window.addEventListener('popstate', (event) => {
-            if (hasPendingOrders()) {
-                history.pushState(null, '', location.href); // Push current state back to history
-                openInfoModal('لا يمكنك الرجوع لأن هناك طلبات قيد التنفيذ. الرجاء حذفها أو إنهائها أولاً.');
-            } else {
-                // Allow back if no pending orders
-                history.back();
-            }
-        });
-        
-        // Initial setup for history state
-        history.pushState(null, '', location.href);
 
         // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
